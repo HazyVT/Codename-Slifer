@@ -26,18 +26,21 @@ class Program {
 
             Raylib.ClearBackground(Color.Black);            
 
-            /*
             player.Update(tiles);
+
+            
 
             for (int i = 0; i < tiles.Length; i++) {
                 Rectangle tile = tiles[i];
-                Raylib.DrawRectangle((int)tile.Position.X, (int)tile.Position.Y, (int)tile.Size.X, (int)tile.Size.Y, Color.Red);
+                Raylib.DrawRectangle((int)tile.Position.X, (int)tile.Position.Y, (int)tile.Size.X, (int)tile.Size.Y, Color.White);
             }
 
-            Raylib.DrawRectangle((int)player.rect.Position.X, (int)player.rect.Position.Y, (int)player.rect.Size.X, (int)player.rect.Size.Y, Color.White);
-            */
 
-            Raylib.DrawTexture(img, 100, 200, Color.White);
+            player.Draw();
+
+            Raylib.DrawText(player.onGround.ToString(), 10, 10, 12, Color.LightGray);
+
+
 
 
             Raylib.EndDrawing();
