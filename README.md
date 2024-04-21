@@ -1,15 +1,9 @@
-# platformergame
+# Game
 
-To install dependencies:
+- Draw vowel and constonants
+- 4 discards
+- gain as many points as possible / beat round limit
+- gain money for round
+- gain power up at end of round
+- spend money on cards
 
-```bash
-bun install
-```
-
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.1.3. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.

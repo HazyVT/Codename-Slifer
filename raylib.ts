@@ -35,6 +35,10 @@ const raylib = dlopen("lib/raylib.dll", {
         args: ['int'],
         returns: 'bool'
     },
+    IsKeyDown: {
+        args: ['int'],
+        returns: 'bool'
+    },
     GetKeyPressed: {
         returns: 'int'
     }
@@ -84,10 +88,41 @@ const custom = dlopen("lib/custom.dll", {
     DrawTexturePro: {
         args: ['pointer', 'pointer', 'pointer', 'pointer', 'float', 'pointer'],
         returns: 'void'
+    },
+    MakeCamera: {
+        args: ['pointer', 'pointer', 'float', 'float'],
+        returns: 'pointer'
+    },
+    BeginMode2D: {
+        args: ['pointer'],
+        returns: 'void'
+    },
+    EndMode2D: {
+        returns: 'void'
+    },
+    LoadFont: {
+        args: ['cstring'],
+        returns: 'pointer'
+    },
+    PrintTextEx: {
+        args: ['pointer', 'cstring', 'pointer', 'float', 'float', 'pointer'],
+        returns: 'void'
+    },
+    PrintText: {
+        args: ['cstring', 'int', 'int', 'int', 'pointer'],
+        returns: 'void'
+    },
+    LoadFontEx: {
+        args: ['cstring', 'int'],
+        returns: 'pointer'
+    },
+    PrintTextPro: {
+        args: ['pointer', 'cstring', 'pointer', 'pointer', 'float', 'float', 'float', 'pointer'],
+        returns: 'void'
     }
 })
 
-class Color {
+export class Color {
     private pointer;
 
     constructor(red: number, green: number, blue: number, alpha: number) {
@@ -95,7 +130,7 @@ class Color {
     }
 }
 
-class Texture {
+export class Texture {
     private pointer;
 
     constructor(path: string) {
@@ -103,27 +138,54 @@ class Texture {
     }
 }
 
-class Vector2 {
+export class Camera2D {
+    private pointer;
+
+    constructor(offset: Vector2, target: Vector2, rotation: number, zoom: number) {
+        const _offset = custom.symbols.MakeVector(offset.x, offset.y);
+        const _target = custom.symbols.MakeVector(target.x, target.y);
+        this.pointer = custom.symbols.MakeCamera(_offset, _target, rotation, zoom);
+    }
+}
+
+export class Font {
+    private pointer;
+
+    constructor(path: string) {
+        this.pointer = custom.symbols.LoadFontEx(Buffer.from(path + "\x00"), 128);
+    }
+}
+
+export class Vector2 {
     public x;
     public y;
+
+    private pointer;
 
     constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
+        this.pointer = custom.symbols.MakeVector(x, y);
     }
 }
 
-class Rectangle {
+
+
+export class Rectangle {
     public x;
     public y;
     public width;
     public height;
+
+    private pointer;
 
     constructor(x: number, y: number, width: number, height: number) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+
+        this.pointer = custom.symbols.MakeRect(x,y,width,height);
     }
 }
 
@@ -246,10 +308,6 @@ const keys = {
 
 class Raylib {
 
-    public static Color = Color;
-    public static Vector2 = Vector2;
-    public static Rectangle = Rectangle;
-
     public static keys = keys;
 
     static initWindow(width: number, height: number, title: string) {
@@ -302,10 +360,14 @@ class Raylib {
 
     static drawTexturePro(texture: Texture, src: Rectangle, dest: Rectangle, origin: Vector2, rotation: number) {
         const white = new Color(255,255,255,255);
-        const _src = custom.symbols.MakeRect(src.x, src.y, src.width, src.height);
-        const _dest = custom.symbols.MakeRect(dest.x, dest.y, dest.width, dest.height);
-        const _origin = custom.symbols.MakeVector(origin.x, origin.y);
-        custom.symbols.DrawTexturePro((texture as any).pointer, _src, _dest, _origin, rotation, (white as any).pointer);
+        custom.symbols.DrawTexturePro(
+            (texture as any).pointer,
+            (src as any).pointer, 
+            (dest as any).pointer, 
+            (origin as any).pointer, 
+            rotation, 
+            (white as any).pointer
+        );
     }
 
     static drawRectangle(x: number, y: number, width: number, height: number, color: Color) {
@@ -347,6 +409,50 @@ class Raylib {
         return raylib.symbols.GetKeyPressed();
     }
     
+    static isKeyDown(key: number) {
+        return raylib.symbols.IsKeyDown(key);
+    }
+
+    static beginMode2D(camera: Camera2D) {
+        custom.symbols.BeginMode2D((camera as any).pointer);
+    }
+
+    static endMode2D() {
+        custom.symbols.EndMode2D();
+    }
+
+    static drawTextEx(font: Font, text: string, position: Vector2, size: number, spacing: number, color: Color) {
+        custom.symbols.PrintTextEx(
+            (font as any).pointer, 
+            Buffer.from(text + "\x00"),
+            (position as any).pointer, 
+            size, 
+            spacing, 
+            (color as any).pointer
+        );
+    }
+    
+    static drawText(text: string, x: number, y: number, size: number, color: Color) {
+        custom.symbols.PrintText(
+            Buffer.from(text + "\x00"),
+            x, y,
+            size,
+            (color as any).pointer
+        )
+    }
+
+    static drawTextPro(font: Font, text: string, position: Vector2, origin: Vector2, rotation: number, size: number, spacing: number, color: Color) {
+        custom.symbols.PrintTextPro(
+            (font as any).pointer,
+            Buffer.from(text + "\x00"),
+            (position as any).pointer,
+            (origin as any).pointer,
+            rotation,
+            size,
+            spacing,
+            (color as any).pointer
+        )
+    }
 
 }
 

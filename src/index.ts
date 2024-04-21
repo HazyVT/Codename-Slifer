@@ -1,35 +1,43 @@
-import Raylib from "../raylib";
+import wordsListPath from "word-list";
+import Raylib, { Camera2D, Color, Font, Vector2 } from "../raylib";
 import Player from "./player";
+import fs from 'node:fs';
+import { approach } from "./util";
 
-console.log("Hello via Bun!");
+const words = fs.readFileSync(wordsListPath, 'utf8').split('\n');
 
-const approach = (start: number, end: number, shift: number) => {
-    if (start < end) {
-        return Math.min(start + shift, end);
-    } else {
-        return Math.max(start - shift, end);
-    }
-}
-
-Raylib.initWindow(640, 480, "Game");
+Raylib.initWindow(640, 480, "Survivors");
 Raylib.setTargetFPS(60);
 
-const size = 16;
-const world = Raylib.loadTexture("assets/world-packed.png");
+const white = new Color(255,255,255,255);
+const black = new Color(0,0,0,255);
+const bg = new Color(60, 138, 78, 255);
+const fontback = new Color(35, 92, 67, 255);
 
-const tree = new Raylib.Rectangle(12 * size, 0 * size, size, size);
-
-const char = new Raylib.Rectangle(size, 7 * size, size, size);
-const chardest = new Raylib.Rectangle(32,32,32, 32);
-const player = new Player(char, chardest);
-const origin = new Raylib.Vector2(16,16);
-
-const white = new Raylib.Color(255,255,255,255);
-const bg = new Raylib.Color(132, 184, 141, 255);
+const font = new Font("assets/Kaph-Regular.ttf");
+let fsize = 16;
 
 
-let rotation = 0;
-let rotToRight = true;
+/*
+const panel = Raylib.loadTexture("assets/blank_panel.png");
+
+var emptyString = "";
+const constanants = "bcdfghjklmnpqrstvwxyz";
+const vowels = "aeiou"
+
+function addConstonant() {
+    emptyString += constanants[Math.floor(Math.random() * constanants.length)];
+};
+
+function addVowel() {
+    emptyString += vowels[Math.floor(Math.random() * vowels.length)];
+}
+
+function niceText(text: string, x: number, y: number) {
+    Raylib.drawTextEx(font, text, new Vector2(x, y + 4), 24, 8, fontback);
+    Raylib.drawTextEx(font, text, new Vector2(x, y), 24, 8, white);
+}
+*/
 
 
 while (!Raylib.windowShouldClose()) {
@@ -37,54 +45,13 @@ while (!Raylib.windowShouldClose()) {
 
     Raylib.clearBackground(bg);
 
-    const key = Raylib.getKeyPressed();
+    Raylib.drawTextPro(font, "Hello World!", new Vector2(100, 100), new Vector2(99,99), 0, fsize, 0, white);
 
-    if (key != 0) {
-        switch (key) {
-            case Raylib.keys.KEY_D:
-            case Raylib.keys.KEY_A:
-            case Raylib.keys.KEY_W:
-            case Raylib.keys.KEY_S:
-                if (rotToRight) {
-                    rotation = 24;  
-                } else {
-                    rotation = -24;
-                }
-                rotToRight = !rotToRight;
-                chardest.width = 38;
-                chardest.height = 38;
-                break;
-        }
-    }
+    fsize = approach(fsize, 16, 0.5);
 
-    if (Raylib.isKeyPressed(Raylib.keys.KEY_D)) {
-        chardest.x += 32;
-        char.width = size;
-    }
-
-    if (Raylib.isKeyPressed(Raylib.keys.KEY_A)) {
-        chardest.x -= 32;
-        char.width = -size;
-    }
-
-    if (Raylib.isKeyPressed(Raylib.keys.KEY_W)) {
-        chardest.y -= 32;
-    }
-
-    if (Raylib.isKeyPressed(Raylib.keys.KEY_S)) {
-        chardest.y += 32;
-    }
-
-    
-
-    rotation = approach(rotation, 0, 2);
-    chardest.width = approach(chardest.width, 32, 1);
-    chardest.height = approach(chardest.height, 32, 1);
-
-    Raylib.drawTexturePro(world, char, chardest, origin, rotation);
-
+    if (Raylib.isKeyPressed(Raylib.keys.KEY_SPACE)) fsize = 24;
 
     Raylib.endDrawing();
 }
 
-Raylib.closeWindow
+Raylib.closeWindow();
