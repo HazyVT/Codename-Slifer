@@ -1,4 +1,4 @@
-# platformergame
+# Codename Slifer
 
 To install dependencies:
 
