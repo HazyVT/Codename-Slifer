@@ -8,6 +8,10 @@ while (Slifer.running) {
   if (Slifer.isKeyPressed(Slifer.keys.K_d)) {
     console.log("D is pressed");
   } 
+
+  Slifer.drawRect('fill', 32, 32, 32, 32);
+
+  Slifer.flip();
 }
 
 Slifer.quit();

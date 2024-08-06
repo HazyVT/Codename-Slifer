@@ -30,6 +30,18 @@ export const sdl = dlopen(libsdl, {
   SDL_DestroyRenderer: {
     args: ['pointer'],
     returns: 'void'
+  },
+  SDL_RenderClear: {
+    args: ['pointer'],
+    returns: 'void'
+  },
+  SDL_RenderPresent: {
+    args: ['pointer'],
+    returns: 'void'
+  },
+  SDL_FillRect: {
+    args: ['pointer', 'pointer', 'uint32_t'],
+    returns: 'int'
   }
 
 })
