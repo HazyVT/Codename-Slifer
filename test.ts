@@ -5,9 +5,11 @@ Slifer.createWindow("Slifer", 640, 480);
 while (Slifer.running) {
   const event = Slifer.getEvents();
 
-  if (event) {
-    if (event.type == eventTypes.quit) {
+  switch (event.type) {
+    case eventTypes.quit:
       Slifer.running = false;
-    }
+      break;
   }
 }
+
+Slifer.quit();

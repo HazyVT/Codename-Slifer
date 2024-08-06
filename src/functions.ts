@@ -22,6 +22,14 @@ export const sdl = dlopen(libsdl, {
   SDL_PollEvent: {
     args: ['pointer'],
     returns: 'int'
+  },
+  SDL_DestroyWindow: {
+    args: ['pointer'],
+    returns: 'void'
+  },
+  SDL_DestroyRenderer: {
+    args: ['pointer'],
+    returns: 'void'
   }
 
 })

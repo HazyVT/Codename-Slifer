@@ -7,9 +7,15 @@ export class Event {
   }
 }
 
-export class QuitEvent extends Event{
+export class QuitEvent extends Event {
 
-  constructor(type: string) {
-    super(type);
+  constructor() {
+    super('QUIT');
+  }
+}
+
+export class EmptyEvent extends Event {
+  constructor() {
+    super('NOEVENT');
   }
 }

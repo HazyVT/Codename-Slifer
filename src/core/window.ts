@@ -21,6 +21,11 @@ class Window {
         sdl.symbols.SDL_Quit();
       }
   }
+
+  public quit() {
+    sdl.symbols.SDL_DestroyRenderer(this.renderer);
+    sdl.symbols.SDL_DestroyWindow(this.pointer);
+  }
 }
 
 export default Window;

@@ -1,12 +1,14 @@
 import Window from "./core/window";
 import { sdl } from "./functions";
 import { ptr } from 'bun:ffi';
-import { Event, QuitEvent } from "./core/events";
+import { EmptyEvent, Event, QuitEvent } from "./core/events";
 
 export enum eventTypes {
   quit = "QUIT",
   keydown = "KEYDOWN",
-  keyup = "KEYUP"
+  keyup = "KEYUP",
+  noevent = "NOEVENT"
+
 }
 
 class Slifer {
@@ -29,18 +31,24 @@ class Slifer {
   
   }
 
-  public static getEvents() : Event | null {
+  public static getEvents() : Event {
     const eventArray = new Uint16Array(32);
     const isEvent = sdl.symbols.SDL_PollEvent(ptr(eventArray));
 
     if (isEvent == 1) {
       switch (eventArray[0]) {
         case 256:
-          return new QuitEvent('QUIT');
+          return new QuitEvent();
+          break;
       }
     }
 
-    return null;
+    return new EmptyEvent();
+  }
+
+  public static quit() : void {
+    this.window?.quit();
+    sdl.symbols.SDL_Quit();
   }
 
 }
