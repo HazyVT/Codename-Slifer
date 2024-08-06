@@ -1,15 +1,13 @@
-import Slifer, { eventTypes } from "./src/slifer";
+import Slifer from "./src/slifer";
 
 Slifer.createWindow("Slifer", 640, 480);
 
 while (Slifer.running) {
-  const event = Slifer.getEvents();
+  Slifer.getEvents();
 
-  switch (event.type) {
-    case eventTypes.quit:
-      Slifer.running = false;
-      break;
-  }
+  if (Slifer.isKeyPressed(Slifer.keys.K_d)) {
+    console.log("D is pressed");
+  } 
 }
 
 Slifer.quit();
