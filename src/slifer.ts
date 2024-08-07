@@ -1,11 +1,12 @@
 import Window from "./core/window";
-import { sdl } from "./functions";
+import { image, sdl } from "./functions";
 import { ptr } from "bun:ffi";
 import { EmptyEvent, Event, QuitEvent } from "./core/events";
 import Keyboard from "./core/keyboard";
 import Transform from "./core/transform";
 import Color from "./core/colors";
 import Mouse from "./core/mouse";
+import Drawable from "./core/drawable";
 
 const colors = {
   red: new Color(255,179,186,255),
@@ -278,10 +279,17 @@ class Slifer {
     title: string,
     width: number,
     height: number
-  ): void {
+  ): Window {
     const init = sdl.symbols.SDL_Init(0x0000ffff);
     if (init != 0) {
       console.error("Slifer: Failed to initialize.");
+      sdl.symbols.SDL_Quit();
+    }
+
+    const initImage = image.symbols.IMG_Init(3);
+    if (initImage != 3) {
+      console.error("Slifer: Imaging library failed to initialize");
+      image.symbols.IMG_Quit();
       sdl.symbols.SDL_Quit();
     }
 
@@ -290,6 +298,8 @@ class Slifer {
     }
 
     this.running = true;
+
+    return this.window;
   }
 
   public static getEvents(): void {
@@ -356,6 +366,7 @@ class Slifer {
 
   public static quit(): void {
     this.window?.quit();
+    image.symbols.IMG_Quit();
     sdl.symbols.SDL_Quit();
   }
 
@@ -373,8 +384,31 @@ class Slifer {
         (this.window as any).rendererPointer,
         (rectTransform as any).pointer
       );
+    } else if (mode == 'line') {
+      sdl.symbols.SDL_RenderDrawRect(
+        (this.window as any).rendererPointer,
+        (rectTransform as any).pointer
+      );
     }
+  }
+
+  public static loadImage(path: string) {
+    return new Drawable(path);
+  }
+
+  public static drawImage(image: Drawable, x: number, y: number, width: number, height: number) {
+    const destSrc = new Uint32Array(4);
+    destSrc[0] = x;
+    destSrc[1] = y;
+    destSrc[2] = width;
+    destSrc[3] = height;
     
+    sdl.symbols.SDL_RenderCopy(
+      (this.window as any).rendererPointer,
+      (image as any).pointer,
+      null,
+      destSrc
+    )
   }
 }
 

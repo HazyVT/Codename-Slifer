@@ -1,20 +1,14 @@
 import Slifer from "./src/slifer";
+import Drawable from "./src/core/drawable";
 
-const player = {
-  xpos: 32,
-  ypos: 32
-}
+const window = Slifer.createWindow("Slifer", 640, 480);
 
-Slifer.createWindow("Slifer", 640, 480);
+const image = Slifer.loadImage("./assets/lilbirb-die.png");
 
 while (Slifer.running) {
   Slifer.getEvents();
 
-  if (Slifer.isMouseButtonPressed(Slifer.buttons.MOUSE_LEFT)) {
-    player.xpos += 400 * Slifer.deltaTime;
-  }
-
-  Slifer.drawRect('fill', player.xpos, player.ypos, 32, 32, Slifer.colors.red);
+  Slifer.drawImage(image, 32, 32, 32, 32);
 
   Slifer.flip();
 }
