@@ -5,6 +5,7 @@ import { EmptyEvent, Event, QuitEvent } from "./core/events";
 import Keyboard from "./core/keyboard";
 import Transform from "./core/transform";
 import Color from "./core/colors";
+import Mouse from "./core/mouse";
 
 const colors = {
   red: new Color(255,179,186,255),
@@ -16,6 +17,12 @@ const colors = {
   gray: new Color(130, 130, 130, 255),
   darkGray: new Color(80, 80, 80, 255)
 };
+
+enum buttons {
+  MOUSE_LEFT = 1,
+  MOUSE_MIDDLE = 2,
+  MOUSE_RIGHT = 3
+}
 
 enum keys {
   K_UNKNOWN = 0,
@@ -258,6 +265,7 @@ class Slifer {
   public static running = false;
 
   public static keys = keys;
+  public static buttons = buttons;
 
   public static colors = colors;
 
@@ -320,6 +328,12 @@ class Slifer {
           // Keyup event
           Keyboard.setKeyUp(eventArray[10]);
           break;
+        case 1025:
+          Mouse.setButtonDown(eventArray[8] - 256);
+          break;
+        case 1026:
+          Mouse.setButtonUp(eventArray[8]);
+          break;
       }
     }
   }
@@ -330,6 +344,14 @@ class Slifer {
 
   public static isKeyPressed(key: number): boolean {
     return Keyboard.isKeyPressed(key);
+  }
+
+  public static isMouseButtonDown(button: number) : boolean {
+    return Mouse.isButtonDown(button);
+  }
+
+  public static isMouseButtonPressed(button: number) : boolean {
+    return Mouse.isButtonPressed(button);
   }
 
   public static quit(): void {
