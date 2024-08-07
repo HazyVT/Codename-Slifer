@@ -49,6 +49,9 @@ export const sdl = dlopen(libsdl, {
   },
   SDL_GetError: {
     returns: 'cstring'
+  },
+  SDL_GetPerformanceCounter: {
+    returns: 'uint64_t'
   }
 
 })

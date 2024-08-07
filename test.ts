@@ -12,9 +12,9 @@ while (Slifer.running) {
   Slifer.getEvents();
 
   if (Slifer.isKeyDown(Slifer.keys.K_d)) {
-    player.xpos += 0.4;
+    player.xpos += 400 * Slifer.deltaTime;
   } else if (Slifer.isKeyDown(Slifer.keys.K_a)) {
-    player.xpos -= 0.4;
+    player.xpos -= 400 * Slifer.deltaTime;
   }
 
   Slifer.drawRect('fill', player.xpos, player.ypos, 32, 32, Slifer.colors.red);

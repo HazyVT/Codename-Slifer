@@ -261,6 +261,11 @@ class Slifer {
 
   public static colors = colors;
 
+  private static now : number = Number(sdl.symbols.SDL_GetPerformanceCounter());
+  private static last : number = 0;
+  public static deltaTime = 0;
+  private static time: number = 0;
+
   public static createWindow(
     title: string,
     width: number,
@@ -280,6 +285,11 @@ class Slifer {
   }
 
   public static getEvents(): void {
+    // Delta time calculations
+    this.last = this.now;
+    this.now = Number(sdl.symbols.SDL_GetPerformanceCounter());
+    this.deltaTime = ((this.now - this.last) * 100000 / Number(sdl.symbols.SDL_GetPerformanceCounter()));
+
     // Sets default color to white
     sdl.symbols.SDL_SetRenderDrawColor(
       (this.window as any).rendererPointer,
