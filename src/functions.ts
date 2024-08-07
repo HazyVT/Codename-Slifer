@@ -39,9 +39,16 @@ export const sdl = dlopen(libsdl, {
     args: ['pointer'],
     returns: 'void'
   },
-  SDL_FillRect: {
-    args: ['pointer', 'pointer', 'uint32_t'],
+  SDL_RenderFillRect: {
+    args: ['pointer', 'pointer'],
     returns: 'int'
+  },
+  SDL_SetRenderDrawColor: {
+    args: ['pointer', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t'],
+    returns: 'int'
+  },
+  SDL_GetError: {
+    returns: 'cstring'
   }
 
 })

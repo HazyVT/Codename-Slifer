@@ -4,13 +4,18 @@ import { ptr } from "bun:ffi";
 import { EmptyEvent, Event, QuitEvent } from "./core/events";
 import Keyboard from "./core/keyboard";
 import Transform from "./core/transform";
+import Color from "./core/colors";
 
-enum eventTypes {
-  quit = "QUIT",
-  keydown = "KEYDOWN",
-  keyup = "KEYUP",
-  noevent = "NOEVENT",
-}
+const colors = {
+  red: new Color(255,179,186,255),
+  orange: new Color(255, 223, 186, 255),
+  yellow: new Color(255, 255, 186, 255),
+  green: new Color(186, 255, 201, 255),
+  blue: new Color(186, 225, 255, 255),
+  lightGray: new Color(200, 200, 200, 255),
+  gray: new Color(130, 130, 130, 255),
+  darkGray: new Color(80, 80, 80, 255)
+};
 
 enum keys {
   K_UNKNOWN = 0,
@@ -254,6 +259,8 @@ class Slifer {
 
   public static keys = keys;
 
+  public static colors = colors;
+
   public static createWindow(
     title: string,
     width: number,
@@ -273,25 +280,38 @@ class Slifer {
   }
 
   public static getEvents(): void {
+    // Sets default color to white
+    sdl.symbols.SDL_SetRenderDrawColor(
+      (this.window as any).rendererPointer,
+      0,
+      0,
+      0,
+      255
+    );
+    // Clears the renderer cache
+    sdl.symbols.SDL_RenderClear((Slifer.window as any).rendererPointer);
+
+    // Get current events
     const eventArray = new Uint16Array(32);
     const isEvent = sdl.symbols.SDL_PollEvent(ptr(eventArray));
 
     if (isEvent == 1) {
       switch (eventArray[0]) {
         case 256:
+          // Quit event
           this.running = false;
           break;
         case 771:
+          // Keydown event
           Keyboard.setKeyDown(eventArray[6]);
           //console.log(eventArray);
           break;
         case 769:
+          // Keyup event
           Keyboard.setKeyUp(eventArray[10]);
           break;
       }
     }
-
-    sdl.symbols.SDL_RenderClear((this.window as any).windowPointer);
   }
 
   public static isKeyDown(key: number): boolean {
@@ -311,15 +331,18 @@ class Slifer {
     sdl.symbols.SDL_RenderPresent((this.window as any).rendererPointer);
   }
 
-  public static drawRect(
-    mode: "line" | "fill",
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  ) {
-    const rectTransform = new Transform(x,y,width,height);
-    sdl.symbols.SDL_FillRect((rectTransform as any).pointer, null, 0xFFFFFF);
+  public static drawRect( mode: "line" | "fill", x: number, y: number, width: number, height: number, color: Color ) {
+    const rectTransform = new Transform(x, y, width, height);
+
+    sdl.symbols.SDL_SetRenderDrawColor( (this.window as any).rendererPointer, color.red, color.green, color.blue, color.alpha );
+
+    if (mode == 'fill') {
+      sdl.symbols.SDL_RenderFillRect(
+        (this.window as any).rendererPointer,
+        (rectTransform as any).pointer
+      );
+    }
+    
   }
 }
 
