@@ -46,7 +46,7 @@ class Slifer {
     this.running = true;
   }
 
-  public static getEvents(): void {
+  public static handleEvents(): boolean {
     // Delta time calculations
     this.last = this.now;
     this.now = Number(sdl.symbols.SDL_GetPerformanceCounter());
@@ -90,6 +90,8 @@ class Slifer {
           break;
       }
     }
+
+    return Slifer.running;
   }
 
   public static isKeyDown(key: number): boolean {
