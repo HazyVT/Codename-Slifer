@@ -7,9 +7,6 @@ import { Color, colors } from "./core/colors";
 import Mouse, { buttons } from "./core/mouse";
 import Drawable from "./core/drawable";
 
-//@ts-ignore
-import icon from '../Resources/default-icon.png';
-
 class Slifer {
 
   public static window: Window | null = null;
@@ -23,8 +20,6 @@ class Slifer {
   private static last : number = 0;
   public static deltaTime = 0;
   private static time: number = 0;
-
-  private static defaultIcon = image.symbols.IMG_Load(Buffer.from(icon));
 
   public static createWindow(
     title: string,
@@ -47,8 +42,6 @@ class Slifer {
     if (this.window == null) {
       this.window = new Window(title, width, height);
     }
-
-    sdl.symbols.SDL_SetWindowIcon((this.window as any).windowPointer, this.defaultIcon);
 
     this.running = true;
   }

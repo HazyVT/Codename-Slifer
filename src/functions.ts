@@ -4,9 +4,29 @@ import { dlopen } from 'bun:ffi';
 import libsdl from '../libs/libSDL2.dylib';
 
 //@ts-ignore
+import libsdlwin from '../libs/libSDL2.dll';
+
+//@ts-ignore
 import libimage from '../libs/libSDL2_image.dylib';
 
-export const sdl = dlopen(libsdl, {
+//@ts-ignore
+import libimagewin from '../libs/libSDL2_image.dll';
+
+let basicSDL;
+let imageSDL;
+
+switch (process.platform) {
+  case "win32":
+    basicSDL = libsdlwin;
+    imageSDL = libimagewin;
+    break;
+  case "darwin":
+    basicSDL = libsdl;
+    imageSDL = libimage;
+    break;
+}
+
+export const sdl = dlopen(basicSDL, {
   SDL_Init: {
     args: ['uint32_t'],
     returns: 'int'
@@ -74,7 +94,7 @@ export const sdl = dlopen(libsdl, {
   }
 })
 
-export const image = dlopen(libimage, {
+export const image = dlopen(imageSDL, {
   IMG_Init: {
     args: ['int'],
     returns: 'int'
