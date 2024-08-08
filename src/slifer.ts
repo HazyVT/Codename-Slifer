@@ -16,12 +16,16 @@ class Slifer {
   public static buttons = buttons;
   public static colors = colors;
 
+  public static Color = Color;
+
   private static now : number = Number(sdl.symbols.SDL_GetPerformanceCounter());
   private static last : number = 0;
   public static deltaTime = 0;
-  private static time: number = 0;
 
-  public static createWindow(
+  /**
+   * Function to initialize Slifer
+   */
+  public static initialize(
     title: string,
     width: number,
     height: number
@@ -46,6 +50,9 @@ class Slifer {
     this.running = true;
   }
 
+  /**
+   * Function used to handle all Slifer events.
+   */
   public static handleEvents(): boolean {
     // Delta time calculations
     this.last = this.now;
@@ -94,32 +101,54 @@ class Slifer {
     return Slifer.running;
   }
 
+  /**
+   * Returns if key is being held down
+   */
   public static isKeyDown(key: number): boolean {
     return Keyboard.getKey(key);
   }
 
+  /**
+   * Returns if key is being being pressed down
+   */
   public static isKeyPressed(key: number): boolean {
     return Keyboard.isKeyPressed(key);
   }
 
+  /**
+   * Returns if mouse button is being held down
+   */
   public static isMouseButtonDown(button: number) : boolean {
     return Mouse.isButtonDown(button);
   }
 
+  /**
+   * Returns if mouse button is being pressed down
+   */
   public static isMouseButtonPressed(button: number) : boolean {
     return Mouse.isButtonPressed(button);
   }
 
+  /**
+   * Slifers quit function
+   */
   public static quit(): void {
     this.window?.quit();
     image.symbols.IMG_Quit();
     sdl.symbols.SDL_Quit();
   }
 
+  /**
+   * Renders the current Slifer context to the screen.
+   * Mandatory for showing graphics on the screen
+   */
   public static flip(): void {
     sdl.symbols.SDL_RenderPresent((this.window as any).rendererPointer);
   }
 
+  /**
+   * Slifer's rectangle drawing function
+   */
   public static drawRect( mode: "line" | "fill", x: number, y: number, width: number, height: number, color: Color ) {
     const rectTransform = new Transform(x, y, width, height);
 
@@ -138,10 +167,16 @@ class Slifer {
     }
   }
 
+  /**
+   * Loads image for later use
+   */
   public static loadImage(path: string) {
     return new Drawable(path);
   }
 
+  /**
+   * Slifer's draw image function
+   */
   public static drawImage(image: Drawable, x: number, y: number, width: number, height: number) {
     const destSrc = new Uint32Array(4);
     destSrc[0] = x;
