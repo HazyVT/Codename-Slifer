@@ -1,15 +1,22 @@
 import Slifer from "./src/slifer";
-import Drawable from "./src/core/drawable";
 
-const window = Slifer.createWindow("Slifer", 640, 480);
+Slifer.createWindow("Slifer", 640, 480);
 
-const image = Slifer.loadImage("./assets/lilbirb-die.png");
+const player = {
+  x: 32,
+  y: 32
+}
 
 while (Slifer.running) {
   Slifer.getEvents();
 
-  Slifer.drawImage(image, 32, 32, 32, 32);
-
+  if (Slifer.isKeyDown(Slifer.keys.K_d)) {
+    player.x += 400 * Slifer.deltaTime;
+  } else if (Slifer.isKeyDown(Slifer.keys.K_a)) {
+    player.x -= 400 * Slifer.deltaTime;
+  }
+  
+  
   Slifer.flip();
 }
 

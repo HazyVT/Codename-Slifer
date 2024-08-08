@@ -67,6 +67,10 @@ export const sdl = dlopen(libsdl, {
   SDL_CreateTextureFromSurface: {
     args: ['pointer', 'pointer'],
     returns: 'pointer'
+  },
+  SDL_SetWindowIcon: {
+    args: ['pointer', 'pointer'],
+    returns: 'void'
   }
 })
 

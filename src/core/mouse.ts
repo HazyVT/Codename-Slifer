@@ -37,4 +37,10 @@ class Mouse {
   }
 }
 
+export enum buttons {
+  MOUSE_LEFT = 1,
+  MOUSE_MIDDLE = 2,
+  MOUSE_RIGHT = 3
+}
+
 export default Mouse;
